@@ -8,7 +8,7 @@ import 'package:dartz/dartz.dart';
 class BillRepoImpl implements BillRepo {
   final billStrore = BillStore();
   @override
-  Either<Failure, BillModel> createBill(BillModel model) {
+  Either<Failure, ExpenseModel> createBill(ExpenseModel model) {
     try {
       final result = billStrore.createBill(model);
       return right(result);
@@ -18,7 +18,12 @@ class BillRepoImpl implements BillRepo {
   }
 
   @override
-  List<BillModel> getBills() {
+  List<ExpenseModel> getBills() {
     return billStrore.billModel;
+  }
+
+  @override
+  int totalAmount() {
+    return billStrore.tAmount();
   }
 }

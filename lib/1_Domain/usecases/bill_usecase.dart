@@ -5,12 +5,16 @@ import 'package:dartz/dartz.dart';
 
 class BillUseCases {
   final billRepo = BillRepoImpl();
-  Either<Failure, BillModel> createBill(BillModel model) {
+  Either<Failure, ExpenseModel> createBill(ExpenseModel model) {
     final result = billRepo.createBill(model);
     return result;
   }
 
-  List<BillModel> getBills() {
+  List<ExpenseModel> getBills() {
     return billRepo.getBills();
+  }
+
+  int totalAmount() {
+    return billRepo.totalAmount();
   }
 }

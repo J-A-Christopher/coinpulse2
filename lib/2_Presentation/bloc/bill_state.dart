@@ -11,7 +11,7 @@ class BillInitial extends BillState {}
 class BillCreating extends BillState {}
 
 class BillCreated extends BillState {
-  final BillModel billData;
+  final ExpenseModel billData;
 
   BillCreated({required this.billData});
   @override
@@ -19,11 +19,16 @@ class BillCreated extends BillState {
 }
 
 class BillRetrieving extends BillState {
-  final List<BillModel> billRetrievedData;
+  final List<ExpenseModel> billRetrievedData;
 
   BillRetrieving({required this.billRetrievedData});
   @override
   List<Object?> get props => [billRetrievedData];
+}
+
+class TotalAmountRetrieved extends BillState {
+  final int totalAmount;
+  TotalAmountRetrieved({required this.totalAmount});
 }
 
 class NewsError extends BillState {

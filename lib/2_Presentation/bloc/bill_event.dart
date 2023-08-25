@@ -7,10 +7,12 @@ abstract class BillEvent extends Equatable {
 }
 
 class CreateBill extends BillEvent {
-  final BillModel createdBill;
+  final ExpenseModel createdBill;
   CreateBill({required this.createdBill});
   @override
   List<Object?> get props => [createdBill];
 }
 
 class RetrieveBill extends BillEvent {}
+
+class GetTotalAmount extends BillEvent {}

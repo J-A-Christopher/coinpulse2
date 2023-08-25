@@ -23,5 +23,8 @@ class BillBloc extends Bloc<BillEvent, BillState> {
     on<RetrieveBill>((event, emit) {
       emit(BillRetrieving(billRetrievedData: billUseCases.getBills()));
     });
+    on<GetTotalAmount>((event, emit) {
+      emit(TotalAmountRetrieved(totalAmount: billUseCases.totalAmount()));
+    });
   }
 }
