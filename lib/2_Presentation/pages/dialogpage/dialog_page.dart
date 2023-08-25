@@ -30,6 +30,7 @@ class _DialogPageState extends State<DialogPage> {
     formState.currentState!.save();
 
     context.read<BillBloc>().add(CreateBill(createdBill: newBill));
+    context.read<BillBloc>().add(RetrieveBill());
 
     Navigator.of(context).pop();
   }
@@ -86,15 +87,10 @@ class _DialogPageState extends State<DialogPage> {
         child: const Icon(Icons.add),
       ),
       appBar: AppBar(
-        title: const Text('Add Bill'),
+        title: const Text('Coin Pulse'),
       ),
       body: Column(
         children: [
-          ElevatedButton(
-              onPressed: () {
-                context.read<BillBloc>().add(RetrieveBill());
-              },
-              child: const Text('Retrieve data')),
           BlocBuilder<BillBloc, BillState>(builder: (context, state) {
             if (state is BillCreating) {
               return const Center(
@@ -104,7 +100,7 @@ class _DialogPageState extends State<DialogPage> {
             if (state is BillRetrieving) {
               return state.billRetrievedData.isEmpty
                   ? const Text('Noting to display')
-                  : Text(state.billRetrievedData.first.billName);
+                  : Text(state.billRetrievedData.first.billAmount);
             }
             return const SizedBox.shrink();
           }),
