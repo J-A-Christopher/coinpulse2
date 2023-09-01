@@ -3,6 +3,7 @@ import 'package:coinpulse2/0_Data/models/income_model.dart';
 import 'package:coinpulse2/2_Presentation/bloc/bill_bloc.dart';
 import 'package:coinpulse2/2_Presentation/bloc/income_bloc.dart';
 import 'package:coinpulse2/2_Presentation/core/utils/colors.dart';
+import 'package:coinpulse2/2_Presentation/pages/tab_bar/tab_bar_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -36,16 +37,23 @@ class DialogPage extends StatefulWidget {
 class _DialogPageState extends State<DialogPage> {
   GlobalKey<FormState> formState = GlobalKey<FormState>();
   GlobalKey<FormState> incomeState = GlobalKey<FormState>();
+
   ExpenseModel newBill = ExpenseModel(
       amount: '',
       createdDate: DateTime.now(),
       title: '',
       id: DateTime.now().toString());
+
   IncomeModel newIncome = IncomeModel(
       amount: '',
       createdDate: DateTime.now(),
       title: '',
       id: DateTime.now().toString());
+  // IncomeModel newIncome = IncomeModel(
+  //     amount: '',
+  //     createdDate: DateTime.now(),
+  //     title: '',
+  //     id: DateTime.now().toString());
 
   void _submitForm() {
     formState.currentState!.save();
@@ -54,7 +62,18 @@ class _DialogPageState extends State<DialogPage> {
     billBloc.add(CreateBill(createdBill: newBill));
 
     billBloc.add(RetrieveBill());
-    context.read<BillBloc>().add(GetTotalAmount());
+    //context.read<BillBloc>().add(GetTotalAmount());
+
+    Navigator.of(context).pop();
+  }
+
+  void saveIncomeForm() {
+    incomeState.currentState!.save();
+
+    context.read<IncomeBloc>().add(CreateIncome(createIncome: newIncome));
+    //context.read<IncomeBloc>().add(GetTotalIncomeAmount());
+    context.read<IncomeBloc>().add(RetrieveIncome());
+    //getTotalIncome();
 
     Navigator.of(context).pop();
   }
@@ -118,20 +137,10 @@ class _DialogPageState extends State<DialogPage> {
     );
   }
 
-  void saveIncomeForm() {
-    incomeState.currentState!.save();
-
-    context.read<IncomeBloc>().add(CreateIncome(createIncome: newIncome));
-    //context.read<IncomeBloc>().add(GetTotalIncomeAmount());
-    context.read<IncomeBloc>().add(RetrieveIncome());
-    //getTotalIncome();
-
-    Navigator.of(context).pop();
-  }
-
-  void getTotalIncome() {
-    context.read<IncomeBloc>().add(GetTotalIncomeAmount());
-    // context.read<IncomeBloc>().add(RetrieveIncome());
+  @override
+  void initState() {
+    super.initState();
+    context.read<BillBloc>().add(RetrieveBill());
   }
 
   void showIncomeDialog() {
@@ -184,12 +193,6 @@ class _DialogPageState extends State<DialogPage> {
         });
   }
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   context.read<BillBloc>().add(GetTotalAmount());
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -202,7 +205,7 @@ class _DialogPageState extends State<DialogPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
+        child: ListView(
           children: [
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.2,
@@ -268,83 +271,80 @@ class _DialogPageState extends State<DialogPage> {
                 ),
               ),
             ),
-            ElevatedButton(
-                onPressed: () {
-                  context.read<IncomeBloc>().add(RetrieveIncome());
-                },
-                child: const Text('mnu')),
-            BlocBuilder<BillBloc, BillState>(builder: (context, state) {
-              if (state is BillCreating) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              if (state is BillRetrieving) {
-                return state.billRetrievedData.isEmpty
-                    ? const Text('Noting to display')
-                    : SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.38,
-                        child: ListView.separated(
-                            itemBuilder: (context, index) {
-                              final expenseItem =
-                                  state.billRetrievedData[index];
-                              final convertDate = expenseItem.createdDate;
-                              final cDate =
-                                  DateFormat.yMMMEd().format(convertDate);
-                              final cTime = DateFormat.jm().format(convertDate);
-
-                              return ListTile(
-                                leading: const CircleAvatar(
-                                  backgroundColor: ColorsUsed.secondaryColor,
-                                  child: Icon(
-                                    Icons.camera,
-                                    color: ColorsUsed.primaryColor,
-                                  ),
-                                ),
-                                title: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(expenseItem.title),
-                                    Text(cDate),
-                                  ],
-                                ),
-                                trailing: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 12.0),
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        '-ksh ${expenseItem.amount}',
-                                        style: const TextStyle(
-                                          color: Colors.red,
-                                        ),
-                                      ),
-                                      Text(cTime)
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                            separatorBuilder: (context, index) {
-                              return Divider(
-                                height: 7,
-                                color: Colors.grey[700],
-                              );
-                            },
-                            itemCount: state.billRetrievedData.length),
-                      );
-              }
-              return const SizedBox.shrink();
-            }),
-            BlocBuilder<IncomeBloc, IncomeState>(builder: (context, state) {
-              if (state is IncomeRetrieving) {
-                return Text(state.incomeRetrievedData.first.amount);
-              }
-              return const SizedBox.shrink();
-            })
+            const SizedBox(
+              height: 50,
+            ),
+            const TopTabBar(),
           ],
         ),
       ),
     );
   }
 }
+
+
+
+// class BillConstructor extends StatelessWidget {
+//   const BillConstructor({
+//     super.key,
+//   });
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return BlocBuilder<BillBloc, BillState>(builder: (context, state) {
+//       if (state is BillRetrieving) {
+//         return state.billRetrievedData.isEmpty
+//             ? const Center(child: Text('Nothing to display'))
+//             : SizedBox(
+//                 height: MediaQuery.of(context).size.height * 0.5,
+//                 child: ListView.separated(
+//                     itemBuilder: (context, index) {
+//                       final expenseItem = state.billRetrievedData[index];
+//                       final convertDate = expenseItem.createdDate;
+//                       final cDate = DateFormat.yMMMEd().format(convertDate);
+//                       final cTime = DateFormat.jm().format(convertDate);
+
+//                       return ListTile(
+//                         leading: const CircleAvatar(
+//                           backgroundColor: ColorsUsed.secondaryColor,
+//                           child: Icon(
+//                             Icons.camera,
+//                             color: ColorsUsed.primaryColor,
+//                           ),
+//                         ),
+//                         title: Column(
+//                           crossAxisAlignment: CrossAxisAlignment.start,
+//                           children: [
+//                             Text(expenseItem.title),
+//                             Text(cDate),
+//                           ],
+//                         ),
+//                         trailing: Padding(
+//                           padding: const EdgeInsets.symmetric(vertical: 12.0),
+//                           child: Column(
+//                             children: [
+//                               Text(
+//                                 '-ksh ${expenseItem.amount}',
+//                                 style: const TextStyle(
+//                                   color: Colors.red,
+//                                 ),
+//                               ),
+//                               Text(cTime)
+//                             ],
+//                           ),
+//                         ),
+//                       );
+//                     },
+//                     separatorBuilder: (context, index) {
+//                       return Divider(
+//                         height: 7,
+//                         color: Colors.grey[700],
+//                       );
+//                     },
+//                     itemCount: state.billRetrievedData.length),
+//               );
+//       }
+//       return const SizedBox.shrink();
+//     });
+//   }
+// }
