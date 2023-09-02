@@ -40,10 +40,12 @@ class _AnalyticsState extends State<Analytics> {
         builder: (context, state) {
           if (state is BillRetrieving) {
             final amount = state.billRetrievedData
-                .map((bill) => double.parse(bill.amount))
+                .map((bill) => BillData(bill.title, double.parse(bill.amount)))
                 .toList();
-            final category =
-                state.billRetrievedData.map((bill) => bill.title).toList();
+
+            final Map<String, double> cumulativeTotals = {};
+
+            //final category = amount.map((bill) => bill.title).toList();
 
             return Padding(
               padding: const EdgeInsets.all(8.0),
@@ -51,10 +53,11 @@ class _AnalyticsState extends State<Analytics> {
                 primaryXAxis: CategoryAxis(),
                 series: <ChartSeries>[
                   ColumnSeries<ChartData, String>(
-                      dataSource: _generateChartData(category, amount),
-                      xValueMapper: (ChartData data, _) => data.category,
-                      yValueMapper: (ChartData data, _) => data.amount,
-                      color: ColorsUsed.primaryColor),
+                    dataSource: _generateChartData(amount, cumulativeTotals),
+                    xValueMapper: (ChartData data, _) => data.category,
+                    yValueMapper: (ChartData data, _) => data.amount,
+                    color: ColorsUsed.primaryColor,
+                  ),
                 ],
               ),
             );
@@ -66,42 +69,32 @@ class _AnalyticsState extends State<Analytics> {
   }
 }
 
-// List<ChartData> _generateChartData(List<BillData> billData, Map<String, double> cumulativeTotals) {
-//   final List<ChartData> chartData = [];
+List<ChartData> _generateChartData(
+    List<BillData> billData, Map<String, double> cumulativeTotals) {
+  final List<ChartData> chartData = [];
 
-//   for (final bill in billData) {
-//     final category = bill.title;
-//     final amount = bill.amount;
+  for (final bill in billData) {
+    final category = bill.title;
+    final amount = bill.amount;
 
-//     // Initialize cumulative total if it's not in the map
-//     cumulativeTotals[category] ??= 0;
+    // Initialize cumulative total if it's not in the map
+    cumulativeTotals[category] ??= 0;
 
-//     // Calculate cumulative total for the current category
-//     cumulativeTotals[category] += amount;
+    // Calculate cumulative total for the current category
+    cumulativeTotals[category] = (cumulativeTotals[category] ?? 0) + amount;
 
-//     // Create chart data with the cumulative total
-//     chartData.add(ChartData(category, cumulativeTotals[category]!));
-//   }
+    // Create chart data with the cumulative total
+    chartData.add(ChartData(category, cumulativeTotals[category]!));
+  }
 
-//   return chartData;
-// }
+  return chartData;
+}
 
 class BillData {
   final String title;
   final double amount;
 
   BillData(this.title, this.amount);
-}
-
-List<ChartData> _generateChartData(
-    List<String> categories, List<double> amounts) {
-  final List<ChartData> chartData = [];
-
-  for (int i = 0; i < categories.length; i++) {
-    chartData.add(ChartData(categories[i], amounts[i]));
-  }
-
-  return chartData;
 }
 
 class ChartData {
