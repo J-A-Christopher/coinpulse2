@@ -1,4 +1,5 @@
 import 'package:coinpulse2/0_Data/datasources/helpers/db_helper.dart';
+import 'package:coinpulse2/0_Data/datasources/helpers/income_helper.dart';
 import 'package:coinpulse2/0_Data/exception/general_exception.dart';
 import 'package:coinpulse2/0_Data/models/bill_model.dart';
 import 'package:coinpulse2/0_Data/models/income_model.dart';
@@ -9,12 +10,13 @@ abstract class BillDataSource {
   IncomeModel createIncome(IncomeModel model);
   int tIncome();
   Future<void> fetchandSetPExpenses();
+  Future<void> fetchandSetIncomes();
 }
 
 class BillStore implements BillDataSource {
   List<ExpenseModel> _expenseModel = [];
 
-  final List<IncomeModel> _incomeModel = [];
+  List<IncomeModel> _incomeModel = [];
 
   List<ExpenseModel> get billModel => [..._expenseModel];
 
@@ -66,6 +68,12 @@ class BillStore implements BillDataSource {
           title: model.title);
       _incomeModel.add(newIncome);
       print('hi${_incomeModel.first.title}');
+      IncomeDBHelper.insert('incomes', {
+        'id': newIncome.id,
+        'title': newIncome.title,
+        'amount': newIncome.amount,
+        'time': newIncome.createdDate.toIso8601String()
+      });
       return newIncome;
     } catch (error) {
       throw ErrorException();
@@ -110,5 +118,33 @@ class BillStore implements BillDataSource {
   Future<void> deleteExpense(String pracId) async {
     await DBHelper.deleteExpense(pracId);
     fetchandSetPExpenses();
+  }
+
+  @override
+  Future<List<IncomeModel>> fetchandSetIncomes() async {
+    try {
+      final dataList = await IncomeDBHelper.getData('incomes');
+      print('Number of records fetched: ${dataList.length}');
+
+      _incomeModel = dataList
+          .map((expense) => IncomeModel(
+                amount: expense['amount'],
+                createdDate: DateTime.parse(expense['time']),
+                title: expense['title'],
+                id: expense['id'], // Removed the extra space here
+              ))
+          .toList();
+      print('Number of records after mapping: ${_incomeModel.length}');
+      return _incomeModel;
+    } catch (error) {
+      print('Error fetching expenses: $error');
+      rethrow;
+    }
+  }
+
+  Future<String> deleteIncome(String incomeId) async {
+    await IncomeDBHelper.deleteExpense(incomeId);
+    fetchandSetIncomes();
+    return 'true';
   }
 }

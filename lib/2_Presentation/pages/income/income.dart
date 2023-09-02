@@ -30,10 +30,16 @@ class _IncomeConstructorState extends State<IncomeConstructor> {
                 height: MediaQuery.of(context).size.height * 0.5,
                 child: ListView.separated(
                     itemBuilder: (context, index) {
+                      final entireExpense = state.incomeRetrievedData;
                       final expenseItem = state.incomeRetrievedData[index];
                       final convertDate = expenseItem.createdDate;
                       final cDate = DateFormat.yMMMEd().format(convertDate);
                       final cTime = DateFormat.jm().format(convertDate);
+                      final clickedItemId = expenseItem.id;
+                      final expenseToDelete = entireExpense.firstWhere(
+                        (element) => element.id == clickedItemId,
+                      );
+                      final String idToDelete = expenseToDelete.id;
 
                       return ListTile(
                         leading: const CircleAvatar(
@@ -55,7 +61,16 @@ class _IncomeConstructorState extends State<IncomeConstructor> {
                             Padding(
                               padding: const EdgeInsets.only(left: 40.0),
                               child: IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    //print(idToDelete);
+                                    context
+                                        .read<IncomeBloc>()
+                                        .add(DeleteIncome(id: idToDelete));
+
+                                    context
+                                        .read<IncomeBloc>()
+                                        .add(RetrieveIncome());
+                                  },
                                   icon: const Icon(
                                     Icons.delete,
                                     color: Colors.redAccent,

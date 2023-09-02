@@ -17,3 +17,8 @@ class CreateIncome extends IncomeEvent {
 class RetrieveIncome extends IncomeEvent {}
 
 class GetTotalIncomeAmount extends IncomeEvent {}
+
+class DeleteIncome extends IncomeEvent {
+  final String id;
+  const DeleteIncome({required this.id});
+}

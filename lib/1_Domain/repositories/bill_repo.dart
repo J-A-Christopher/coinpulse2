@@ -12,4 +12,6 @@ abstract class BillRepo {
   int totalIncome();
   Future<void> fetchandSetPExpenses();
   Future<void> deleteExpense(String expenseId);
+  Future<void> fetchandSetIncomes();
+  Future<void> deleteIncome(String incomeId);
 }

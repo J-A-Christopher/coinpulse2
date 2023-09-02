@@ -18,11 +18,17 @@ class IncomeBloc extends Bloc<IncomeEvent, IncomeState> {
           (income) => emit(IncomeCreated(incomeData: income)));
     });
 
-    on<RetrieveIncome>((event, emit) {
-      emit(IncomeRetrieving(incomeRetrievedData: billUseCases.getIncome()));
+    on<RetrieveIncome>((event, emit) async {
+      emit(IncomeRetrieving(
+          incomeRetrievedData: await billUseCases.fetchandSetIncomes()));
     });
     on<GetTotalIncomeAmount>((event, emit) {
       emit(TotalIncomeRetrieved(totalAmount: billUseCases.totalIncome()));
     });
+    on<DeleteIncome>(
+      (event, emit) async {
+        emit(DeletingIncome(id: await billUseCases.deleteIncome(event.id)));
+      },
+    );
   }
 }

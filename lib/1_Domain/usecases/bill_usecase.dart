@@ -39,4 +39,12 @@ class BillUseCases {
   Future deleteExpense(String expenseId) async {
     return await billRepo.deleteExpense(expenseId);
   }
+
+  Future<List<IncomeModel>> fetchandSetIncomes() async {
+    return await billRepo.fetchandSetIncomes();
+  }
+
+  Future<String> deleteIncome(String incomeId) async {
+    return await billRepo.deleteIncome(incomeId);
+  }
 }

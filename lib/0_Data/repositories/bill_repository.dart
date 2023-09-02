@@ -57,4 +57,14 @@ class BillRepoImpl implements BillRepo {
   Future<void> deleteExpense(String expenseId) async {
     return await billStrore.deleteExpense(expenseId);
   }
+
+  @override
+  Future<List<IncomeModel>> fetchandSetIncomes() async {
+    return await billStrore.fetchandSetIncomes();
+  }
+
+  @override
+  Future<String> deleteIncome(String incomeId) async {
+    return await billStrore.deleteIncome(incomeId);
+  }
 }

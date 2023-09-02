@@ -3,6 +3,7 @@ import 'package:path/path.dart' as path;
 import 'package:sqflite/sqlite_api.dart';
 
 class DBHelper {
+  //Expenses
   static Future<Database> database() async {
     final dbPath = await sql.getDatabasesPath();
     return sql.openDatabase(path.join(dbPath, 'expenses.db'),
@@ -28,4 +29,5 @@ class DBHelper {
     var id1 = await db.delete('expenses', where: 'id = ?', whereArgs: [id]);
     return id1;
   }
+  //Incomes
 }

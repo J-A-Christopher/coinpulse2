@@ -38,3 +38,8 @@ class NewsError extends IncomeState {
   @override
   List<Object?> get props => [error];
 }
+
+class DeletingIncome extends IncomeState {
+  final String id;
+  const DeletingIncome({required this.id});
+}
