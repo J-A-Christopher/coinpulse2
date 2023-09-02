@@ -5,9 +5,11 @@ import 'package:dartz/dartz.dart';
 
 abstract class BillRepo {
   Either<Failure, ExpenseModel> createBill(ExpenseModel model);
-  List<ExpenseModel> getBills();
+  //List<ExpenseModel> getBills();
   int totalAmount();
   Either<Failure, IncomeModel> createIncome(IncomeModel model);
   List<IncomeModel> getIncome();
   int totalIncome();
+  Future<void> fetchandSetPExpenses();
+  Future<void> deleteExpense(String expenseId);
 }

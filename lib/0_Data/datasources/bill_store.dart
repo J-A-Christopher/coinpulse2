@@ -1,3 +1,4 @@
+import 'package:coinpulse2/0_Data/datasources/helpers/db_helper.dart';
 import 'package:coinpulse2/0_Data/exception/general_exception.dart';
 import 'package:coinpulse2/0_Data/models/bill_model.dart';
 import 'package:coinpulse2/0_Data/models/income_model.dart';
@@ -7,10 +8,11 @@ abstract class BillDataSource {
   int tAmount();
   IncomeModel createIncome(IncomeModel model);
   int tIncome();
+  Future<void> fetchandSetPExpenses();
 }
 
 class BillStore implements BillDataSource {
-  final List<ExpenseModel> _expenseModel = [];
+  List<ExpenseModel> _expenseModel = [];
 
   final List<IncomeModel> _incomeModel = [];
 
@@ -28,6 +30,13 @@ class BillStore implements BillDataSource {
           title: model.title);
       _expenseModel.add(newBill);
       print(_expenseModel.first.title);
+      DBHelper.insert('expenses', {
+        'id': newBill.id,
+        'title': newBill.title,
+        'amount': newBill.amount,
+        'time': newBill.createdDate.toIso8601String()
+      });
+
       return newBill;
     } catch (error) {
       throw ErrorException();
@@ -74,5 +83,32 @@ class BillStore implements BillDataSource {
     print('hak$totalIncome');
 
     return totalIncome;
+  }
+
+  @override
+  Future<List<ExpenseModel>> fetchandSetPExpenses() async {
+    try {
+      final dataList = await DBHelper.getData('expenses');
+      print('Number of records fetched: ${dataList.length}');
+
+      _expenseModel = dataList
+          .map((expense) => ExpenseModel(
+                amount: expense['amount'],
+                createdDate: DateTime.parse(expense['time']),
+                title: expense['title'],
+                id: expense['id'], // Removed the extra space here
+              ))
+          .toList();
+      print('Number of records after mapping: ${_expenseModel.length}');
+      return _expenseModel;
+    } catch (error) {
+      print('Error fetching expenses: $error');
+      rethrow;
+    }
+  }
+
+  Future<void> deleteExpense(String pracId) async {
+    await DBHelper.deleteExpense(pracId);
+    fetchandSetPExpenses();
   }
 }

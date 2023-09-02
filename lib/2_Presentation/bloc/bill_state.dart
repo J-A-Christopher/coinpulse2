@@ -31,6 +31,11 @@ class TotalAmountRetrieved extends BillState {
   TotalAmountRetrieved({required this.totalAmount});
 }
 
+class DeletingBill extends BillState {
+  final String id;
+  DeletingBill({required this.id});
+}
+
 class NewsError extends BillState {
   final String error;
   NewsError({required this.error});

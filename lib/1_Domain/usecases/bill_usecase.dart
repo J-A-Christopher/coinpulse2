@@ -11,9 +11,9 @@ class BillUseCases {
     return result;
   }
 
-  List<ExpenseModel> getBills() {
-    return billRepo.getBills();
-  }
+  // Future<void> getBills() async{
+  //   return await billRepo.getBills();
+  // }
 
   int totalAmount() {
     return billRepo.totalAmount();
@@ -30,5 +30,13 @@ class BillUseCases {
 
   int totalIncome() {
     return billRepo.totalIncome();
+  }
+
+  Future<List<ExpenseModel>> fetchandSetPExpenses() async {
+    return await billRepo.fetchandSetPExpenses();
+  }
+
+  Future deleteExpense(String expenseId) async {
+    return await billRepo.deleteExpense(expenseId);
   }
 }

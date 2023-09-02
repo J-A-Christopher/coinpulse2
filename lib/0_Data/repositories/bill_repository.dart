@@ -18,10 +18,10 @@ class BillRepoImpl implements BillRepo {
     }
   }
 
-  @override
-  List<ExpenseModel> getBills() {
-    return billStrore.billModel;
-  }
+//   @override
+//  Future<void> getBills() async{
+//     return await billStrore.fetchandSetPExpenses();
+//   }
 
   @override
   int totalAmount() {
@@ -46,5 +46,15 @@ class BillRepoImpl implements BillRepo {
   @override
   int totalIncome() {
     return billStrore.tIncome();
+  }
+
+  @override
+  Future<List<ExpenseModel>> fetchandSetPExpenses() async {
+    return await billStrore.fetchandSetPExpenses();
+  }
+
+  @override
+  Future<void> deleteExpense(String expenseId) async {
+    return await billStrore.deleteExpense(expenseId);
   }
 }

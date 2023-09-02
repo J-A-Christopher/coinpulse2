@@ -15,6 +15,12 @@ class IncomeConstructor extends StatefulWidget {
 
 class _IncomeConstructorState extends State<IncomeConstructor> {
   @override
+  void initState() {
+    super.initState();
+    context.read<IncomeBloc>().add(RetrieveIncome());
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<IncomeBloc, IncomeState>(builder: (context, state) {
       if (state is IncomeRetrieving) {
@@ -37,11 +43,24 @@ class _IncomeConstructorState extends State<IncomeConstructor> {
                             color: ColorsUsed.primaryColor,
                           ),
                         ),
-                        title: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        title: Row(
                           children: [
-                            Text(expenseItem.title),
-                            Text(cDate),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(expenseItem.title),
+                                Text(cDate),
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 40.0),
+                              child: IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(
+                                    Icons.delete,
+                                    color: Colors.redAccent,
+                                  )),
+                            )
                           ],
                         ),
                         trailing: Padding(
@@ -49,9 +68,9 @@ class _IncomeConstructorState extends State<IncomeConstructor> {
                           child: Column(
                             children: [
                               Text(
-                                '-ksh ${expenseItem.amount}',
+                                '+ksh ${expenseItem.amount}',
                                 style: const TextStyle(
-                                  color: Colors.red,
+                                  color: ColorsUsed.selectedNavColor,
                                 ),
                               ),
                               Text(cTime)

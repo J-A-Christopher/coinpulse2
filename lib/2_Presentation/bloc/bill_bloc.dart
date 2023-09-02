@@ -20,11 +20,16 @@ class BillBloc extends Bloc<BillEvent, BillState> {
           (bill) => emit(BillCreated(billData: bill)));
     });
 
-    on<RetrieveBill>((event, emit) {
-      emit(BillRetrieving(billRetrievedData: billUseCases.getBills()));
+    on<RetrieveBill>((event, emit) async {
+      emit(BillRetrieving(
+          billRetrievedData: await billUseCases.fetchandSetPExpenses()));
     });
     on<GetTotalAmount>((event, emit) {
       emit(TotalAmountRetrieved(totalAmount: billUseCases.totalAmount()));
     });
+
+    on<DeleteBill>(((event, emit) async {
+      emit(DeletingBill(id: await billUseCases.deleteExpense(event.id)));
+    }));
   }
 }

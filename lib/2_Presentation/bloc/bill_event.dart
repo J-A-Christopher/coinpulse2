@@ -16,3 +16,8 @@ class CreateBill extends BillEvent {
 class RetrieveBill extends BillEvent {}
 
 class GetTotalAmount extends BillEvent {}
+
+class DeleteBill extends BillEvent {
+  final String id;
+  DeleteBill({required this.id});
+}

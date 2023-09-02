@@ -49,11 +49,6 @@ class _DialogPageState extends State<DialogPage> {
       createdDate: DateTime.now(),
       title: '',
       id: DateTime.now().toString());
-  // IncomeModel newIncome = IncomeModel(
-  //     amount: '',
-  //     createdDate: DateTime.now(),
-  //     title: '',
-  //     id: DateTime.now().toString());
 
   void _submitForm() {
     formState.currentState!.save();
@@ -62,7 +57,7 @@ class _DialogPageState extends State<DialogPage> {
     billBloc.add(CreateBill(createdBill: newBill));
 
     billBloc.add(RetrieveBill());
-    //context.read<BillBloc>().add(GetTotalAmount());
+    context.read<BillBloc>().add(GetTotalAmount());
 
     Navigator.of(context).pop();
   }
@@ -71,9 +66,8 @@ class _DialogPageState extends State<DialogPage> {
     incomeState.currentState!.save();
 
     context.read<IncomeBloc>().add(CreateIncome(createIncome: newIncome));
-    //context.read<IncomeBloc>().add(GetTotalIncomeAmount());
+
     context.read<IncomeBloc>().add(RetrieveIncome());
-    //getTotalIncome();
 
     Navigator.of(context).pop();
   }
@@ -141,6 +135,7 @@ class _DialogPageState extends State<DialogPage> {
   void initState() {
     super.initState();
     context.read<BillBloc>().add(RetrieveBill());
+    //context.read<IncomeBloc>().add(GetTotalIncomeAmount());
   }
 
   void showIncomeDialog() {
@@ -236,9 +231,10 @@ class _DialogPageState extends State<DialogPage> {
                                   child: BlocBuilder<IncomeBloc, IncomeState>(
                                     builder: (context, state) {
                                       if (state is TotalIncomeRetrieved) {
+                                        print('kk${state.totalAmount}');
                                         return Text('${state.totalAmount}');
                                       }
-                                      return const Text('09');
+                                      return const Text('00');
                                     },
                                   ),
                                 )
@@ -257,12 +253,13 @@ class _DialogPageState extends State<DialogPage> {
                                 BlocBuilder<BillBloc, BillState>(
                                     builder: (context, state) {
                                   if (state is TotalAmountRetrieved) {
+                                    print('kj${state.totalAmount}');
                                     return Text('${state.totalAmount}');
                                   }
-                                  return const Text('0');
-                                })
+                                  return const Text('00');
+                                }),
                               ],
-                            )
+                            ),
                           ],
                         )
                       ],
@@ -281,70 +278,3 @@ class _DialogPageState extends State<DialogPage> {
     );
   }
 }
-
-
-
-// class BillConstructor extends StatelessWidget {
-//   const BillConstructor({
-//     super.key,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return BlocBuilder<BillBloc, BillState>(builder: (context, state) {
-//       if (state is BillRetrieving) {
-//         return state.billRetrievedData.isEmpty
-//             ? const Center(child: Text('Nothing to display'))
-//             : SizedBox(
-//                 height: MediaQuery.of(context).size.height * 0.5,
-//                 child: ListView.separated(
-//                     itemBuilder: (context, index) {
-//                       final expenseItem = state.billRetrievedData[index];
-//                       final convertDate = expenseItem.createdDate;
-//                       final cDate = DateFormat.yMMMEd().format(convertDate);
-//                       final cTime = DateFormat.jm().format(convertDate);
-
-//                       return ListTile(
-//                         leading: const CircleAvatar(
-//                           backgroundColor: ColorsUsed.secondaryColor,
-//                           child: Icon(
-//                             Icons.camera,
-//                             color: ColorsUsed.primaryColor,
-//                           ),
-//                         ),
-//                         title: Column(
-//                           crossAxisAlignment: CrossAxisAlignment.start,
-//                           children: [
-//                             Text(expenseItem.title),
-//                             Text(cDate),
-//                           ],
-//                         ),
-//                         trailing: Padding(
-//                           padding: const EdgeInsets.symmetric(vertical: 12.0),
-//                           child: Column(
-//                             children: [
-//                               Text(
-//                                 '-ksh ${expenseItem.amount}',
-//                                 style: const TextStyle(
-//                                   color: Colors.red,
-//                                 ),
-//                               ),
-//                               Text(cTime)
-//                             ],
-//                           ),
-//                         ),
-//                       );
-//                     },
-//                     separatorBuilder: (context, index) {
-//                       return Divider(
-//                         height: 7,
-//                         color: Colors.grey[700],
-//                       );
-//                     },
-//                     itemCount: state.billRetrievedData.length),
-//               );
-//       }
-//       return const SizedBox.shrink();
-//     });
-//   }
-// }
