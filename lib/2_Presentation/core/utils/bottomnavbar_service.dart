@@ -20,7 +20,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   final List<Widget> _screens = [
     const HomePage(),
     const DialogueWrapper(),
-    const Analytics()
+    const AnalyticsWrapper()
   ];
   void _onItemTapped(int index) {
     setState(() {

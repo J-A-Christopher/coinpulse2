@@ -73,6 +73,19 @@ class _DialogPageState extends State<DialogPage> {
   }
 
   void _showDialog() {
+    List<String> expenseCategoryTypes = [
+      'shopping',
+      'repairs',
+      'fees/education',
+      'rent',
+      'healthcare',
+      'entertainment',
+      'debt',
+      'savings',
+      'tax',
+      'Transport',
+      'other'
+    ];
     showDialog(
       context: context,
       builder: (context) {
@@ -85,7 +98,19 @@ class _DialogPageState extends State<DialogPage> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    TextFormField(
+                    DropdownButtonFormField(
+                      items: expenseCategoryTypes
+                          .map((String type) => DropdownMenuItem<String>(
+                                value: type,
+                                child: Text(
+                                  type,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ))
+                          .toList(),
                       onSaved: (value) {
                         newBill = ExpenseModel(
                             amount: '',
@@ -93,8 +118,22 @@ class _DialogPageState extends State<DialogPage> {
                             title: value!,
                             id: DateTime.now.toString());
                       },
-                      decoration:
-                          const InputDecoration(hintText: 'Expense name'),
+                      onChanged: (String? value) {
+                        setState(() {
+                          //selectedValue = value;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Input Cannot Be Empty !';
+                        }
+                        return null;
+                      },
+                      decoration: const InputDecoration(
+                        border: UnderlineInputBorder(),
+                        contentPadding: EdgeInsets.all(8),
+                        hintText: 'Select Expense Category',
+                      ),
                     ),
                     const SizedBox(
                       height: 10,
