@@ -25,7 +25,9 @@ class _IncomeConstructorState extends State<IncomeConstructor> {
     return BlocBuilder<IncomeBloc, IncomeState>(builder: (context, state) {
       if (state is IncomeRetrieving) {
         return state.incomeRetrievedData.isEmpty
-            ? const Center(child: Text('Nothing to display'))
+            ? const Center(
+                child: Text(
+                    'Nothing to display tap on the two zeros below Income(ksh) text to add an income.'))
             : SizedBox(
                 height: MediaQuery.of(context).size.height * 0.5,
                 child: ListView.separated(

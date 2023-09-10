@@ -86,6 +86,7 @@ class _DialogPageState extends State<DialogPage> {
       'Transport',
       'other'
     ];
+
     showDialog(
       context: context,
       builder: (context) {
@@ -178,6 +179,17 @@ class _DialogPageState extends State<DialogPage> {
   }
 
   void showIncomeDialog() {
+    List<String> incomeCategoryTypes = [
+      'employmentincome',
+      'selfemployment',
+      'rental income',
+      'investment income',
+      'Gambling wins',
+      'Gifts',
+      'scholarships',
+      'commisions ',
+      'other'
+    ];
     showDialog(
         context: context,
         builder: (context) {
@@ -188,17 +200,54 @@ class _DialogPageState extends State<DialogPage> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    TextFormField(
+                    DropdownButtonFormField(
+                      items: incomeCategoryTypes
+                          .map((String type) => DropdownMenuItem<String>(
+                                value: type,
+                                child: Text(
+                                  type,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ))
+                          .toList(),
                       onSaved: (value) {
                         newIncome = IncomeModel(
-                            amount: newIncome.amount,
+                            amount: '',
                             createdDate: DateTime.now(),
                             title: value!,
-                            id: DateTime.now().toString());
+                            id: DateTime.now.toString());
                       },
-                      decoration:
-                          const InputDecoration(hintText: 'Income name'),
+                      onChanged: (String? value) {
+                        setState(() {
+                          //selectedValue = value;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Input Cannot Be Empty !';
+                        }
+                        return null;
+                      },
+                      decoration: const InputDecoration(
+                        border: UnderlineInputBorder(),
+                        contentPadding: EdgeInsets.all(8),
+                        hintText: 'Select Expense Category',
+                      ),
                     ),
+                    // TextFormField(
+                    //   onSaved: (value) {
+                    //     newIncome = IncomeModel(
+                    //         amount: newIncome.amount,
+                    //         createdDate: DateTime.now(),
+                    //         title: value!,
+                    //         id: DateTime.now().toString());
+                    //   },
+                    //   decoration:
+                    //       const InputDecoration(hintText: 'Income name'),
+                    // ),
                     const SizedBox(
                       height: 10,
                     ),
@@ -256,7 +305,7 @@ class _DialogPageState extends State<DialogPage> {
                             const Column(
                               children: [
                                 Text('Total Balance (Ksh)'),
-                                Text('34')
+                                Text('3400')
                               ],
                             ),
                             const SizedBox(
@@ -273,7 +322,9 @@ class _DialogPageState extends State<DialogPage> {
                                         print('kk${state.totalAmount}');
                                         return Text('${state.totalAmount}');
                                       }
-                                      return const Text('00');
+                                      return const Text('10000',
+                                          style:
+                                              TextStyle(color: Colors.white));
                                     },
                                   ),
                                 )
@@ -295,7 +346,10 @@ class _DialogPageState extends State<DialogPage> {
                                     print('kj${state.totalAmount}');
                                     return Text('${state.totalAmount}');
                                   }
-                                  return const Text('00');
+                                  return const Text(
+                                    '6600',
+                                    style: TextStyle(color: Colors.white),
+                                  );
                                 }),
                               ],
                             ),
