@@ -57,7 +57,8 @@ class _DialogPageState extends State<DialogPage> {
     billBloc.add(CreateBill(createdBill: newBill));
 
     billBloc.add(RetrieveBill());
-    context.read<BillBloc>().add(GetTotalAmount());
+
+    billBloc.add(GetTotalAmount());
 
     Navigator.of(context).pop();
   }
@@ -175,6 +176,7 @@ class _DialogPageState extends State<DialogPage> {
   void initState() {
     super.initState();
     context.read<BillBloc>().add(RetrieveBill());
+
     //context.read<IncomeBloc>().add(GetTotalIncomeAmount());
   }
 
@@ -327,7 +329,7 @@ class _DialogPageState extends State<DialogPage> {
                                               TextStyle(color: Colors.white));
                                     },
                                   ),
-                                )
+                                ),
                               ],
                             )
                           ],
@@ -346,10 +348,7 @@ class _DialogPageState extends State<DialogPage> {
                                     print('kj${state.totalAmount}');
                                     return Text('${state.totalAmount}');
                                   }
-                                  return const Text(
-                                    '6600',
-                                    style: TextStyle(color: Colors.white),
-                                  );
+                                  return const Text('6000');
                                 }),
                               ],
                             ),
@@ -362,7 +361,7 @@ class _DialogPageState extends State<DialogPage> {
               ),
             ),
             const SizedBox(
-              height: 50,
+              height: 30,
             ),
             const TopTabBar(),
           ],

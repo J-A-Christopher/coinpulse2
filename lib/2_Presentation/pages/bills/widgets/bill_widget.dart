@@ -40,12 +40,14 @@ class BillConstructor extends StatelessWidget {
                         ),
                         title: Row(
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(expenseItem.title),
-                                Text(cDate),
-                              ],
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(expenseItem.title),
+                                  Text(cDate),
+                                ],
+                              ),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 40.0),
