@@ -3,6 +3,7 @@ import 'package:coinpulse2/0_Data/models/income_model.dart';
 import 'package:coinpulse2/2_Presentation/bloc/bill_bloc.dart';
 import 'package:coinpulse2/2_Presentation/bloc/income_bloc.dart';
 import 'package:coinpulse2/2_Presentation/core/utils/colors.dart';
+import 'package:coinpulse2/2_Presentation/pages/bills/pages/all_expenses.dart';
 import 'package:coinpulse2/2_Presentation/pages/tab_bar/tab_bar_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -349,8 +350,20 @@ class _DialogPageState extends State<DialogPage> {
                 ),
               ),
             ),
-            const SizedBox(
+            SizedBox(
               height: 30,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 200.0),
+                child: TextButton(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => BlocProvider.value(
+                                value: BlocProvider.of<BillBloc>(context),
+                                child: const EntireExpenses(),
+                              )));
+                    },
+                    child: const Text('See all Expenses')),
+              ),
             ),
             const TopTabBar(),
           ],

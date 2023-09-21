@@ -1,14 +1,17 @@
 import 'package:bloc/bloc.dart';
 import 'package:coinpulse2/0_Data/models/income_model.dart';
 import 'package:coinpulse2/1_Domain/usecases/bill_usecase.dart';
+import 'package:coinpulse2/di/injection.dart';
 import 'package:equatable/equatable.dart';
+import 'package:injectable/injectable.dart';
 
 part 'income_event.dart';
 part 'income_state.dart';
 
+@injectable
 class IncomeBloc extends Bloc<IncomeEvent, IncomeState> {
   IncomeBloc() : super(IncomeInitial()) {
-    final billUseCases = BillUseCases();
+    final billUseCases = getIt<BillUseCases>();
     on<CreateIncome>((event, emit) {
       emit(IncomeCreating());
       final createdIncome = billUseCases.createIncome(event.createIncome);

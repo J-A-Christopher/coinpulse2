@@ -30,81 +30,103 @@ class BillConstructor extends StatelessWidget {
                       );
                       final String idToDelete = expenseToDelete.id;
 
-                      return ListTile(
-                        leading: const CircleAvatar(
-                          backgroundColor: ColorsUsed.secondaryColor,
-                          child: Icon(
-                            Icons.camera,
-                            color: ColorsUsed.primaryColor,
-                          ),
-                        ),
-                        title: Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(expenseItem.title),
-                                  Text(cDate),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 40.0),
-                              child: IconButton(
-                                  onPressed: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (_) => AlertDialog(
-                                              title: const Text('Confirmation'),
-                                              content: const Text(
-                                                  'Are you sure you wanna delete?'),
-                                              actions: [
-                                                TextButton(
-                                                    onPressed: () {
-                                                      context
-                                                          .read<BillBloc>()
-                                                          .add(DeleteBill(
-                                                              id: idToDelete));
+                      final creationTime =
+                          state.billRetrievedData[index].createdDate;
+                      final currentDate = DateTime.now();
+                      final difference =
+                          currentDate.difference(creationTime).inDays;
 
-                                                      context
-                                                          .read<BillBloc>()
-                                                          .add(RetrieveBill());
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                    child: const Text('Yes')),
-                                                TextButton(
-                                                    onPressed: () {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                    child: const Text('No'))
-                                              ],
-                                            ));
-                                  },
-                                  icon: const Icon(
-                                    Icons.delete,
-                                    color: Colors.redAccent,
-                                  )),
-                            )
-                          ],
-                        ),
-                        trailing: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 12.0),
-                          child: Column(
-                            children: [
-                              Text(
-                                '-ksh ${expenseItem.amount}',
-                                style: const TextStyle(
-                                  color: Colors.red,
+                      return difference <= 7
+                          ? ListTile(
+                              leading: const CircleAvatar(
+                                backgroundColor: ColorsUsed.secondaryColor,
+                                child: Icon(
+                                  Icons.camera,
+                                  color: ColorsUsed.primaryColor,
                                 ),
                               ),
-                              Text(cTime)
-                            ],
-                          ),
-                        ),
-                      );
+                              title: Row(
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(expenseItem.title),
+                                        Text(cDate),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 40.0),
+                                    child: IconButton(
+                                        onPressed: () {
+                                          showDialog(
+                                              barrierDismissible: false,
+                                              context: context,
+                                              builder: (_) => AlertDialog(
+                                                    title: const Text(
+                                                        'Confirmation'),
+                                                    content: const Text(
+                                                        'Are you sure you wanna delete?'),
+                                                    actions: [
+                                                      TextButton(
+                                                          onPressed: () {
+                                                            context
+                                                                .read<
+                                                                    BillBloc>()
+                                                                .add(DeleteBill(
+                                                                    id: idToDelete));
+
+                                                            context
+                                                                .read<
+                                                                    BillBloc>()
+                                                                .add(
+                                                                    RetrieveBill());
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          child: const Text(
+                                                              'Yes')),
+                                                      TextButton(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          child:
+                                                              const Text('No'))
+                                                    ],
+                                                  ));
+                                        },
+                                        icon: const Icon(
+                                          Icons.delete,
+                                          color: Colors.redAccent,
+                                        )),
+                                  )
+                                ],
+                              ),
+                              trailing: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 12.0),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      '-ksh ${expenseItem.amount}',
+                                      style: const TextStyle(
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                    Text(cTime)
+                                  ],
+                                ),
+                              ),
+                            )
+                          : const Center(
+                              child: Text(
+                                  'No expense added during the previous week !'),
+                            );
                     },
                     separatorBuilder: (context, index) {
                       return Divider(

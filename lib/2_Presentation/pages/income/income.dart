@@ -66,14 +66,37 @@ class _IncomeConstructorState extends State<IncomeConstructor> {
                               padding: const EdgeInsets.only(left: 40.0),
                               child: IconButton(
                                   onPressed: () {
-                                    //print(idToDelete);
-                                    context
-                                        .read<IncomeBloc>()
-                                        .add(DeleteIncome(id: idToDelete));
+                                    showDialog(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        builder: (_) => AlertDialog(
+                                              title: const Text('Confirmation'),
+                                              content: const Text(
+                                                  'Are you sure you wanna delete?'),
+                                              actions: [
+                                                TextButton(
+                                                    onPressed: () {
+                                                      context
+                                                          .read<IncomeBloc>()
+                                                          .add(DeleteIncome(
+                                                              id: idToDelete));
 
-                                    context
-                                        .read<IncomeBloc>()
-                                        .add(RetrieveIncome());
+                                                      context
+                                                          .read<IncomeBloc>()
+                                                          .add(
+                                                              RetrieveIncome());
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                    child: const Text('Yes')),
+                                                TextButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                    child: const Text('No'))
+                                              ],
+                                            ));
                                   },
                                   icon: const Icon(
                                     Icons.delete,

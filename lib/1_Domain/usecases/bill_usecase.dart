@@ -3,7 +3,9 @@ import 'package:coinpulse2/0_Data/models/income_model.dart';
 import 'package:coinpulse2/0_Data/repositories/bill_repository.dart';
 import 'package:coinpulse2/1_Domain/failures/failures.dart';
 import 'package:dartz/dartz.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class BillUseCases {
   final billRepo = BillRepoImpl();
   Either<Failure, ExpenseModel> createBill(ExpenseModel model) {
