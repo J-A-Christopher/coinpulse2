@@ -53,13 +53,35 @@ class BillConstructor extends StatelessWidget {
                               padding: const EdgeInsets.only(left: 40.0),
                               child: IconButton(
                                   onPressed: () {
-                                    context
-                                        .read<BillBloc>()
-                                        .add(DeleteBill(id: idToDelete));
+                                    showDialog(
+                                        context: context,
+                                        builder: (_) => AlertDialog(
+                                              title: const Text('Confirmation'),
+                                              content: const Text(
+                                                  'Are you sure you wanna delete?'),
+                                              actions: [
+                                                TextButton(
+                                                    onPressed: () {
+                                                      context
+                                                          .read<BillBloc>()
+                                                          .add(DeleteBill(
+                                                              id: idToDelete));
 
-                                    context
-                                        .read<BillBloc>()
-                                        .add(RetrieveBill());
+                                                      context
+                                                          .read<BillBloc>()
+                                                          .add(RetrieveBill());
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                    child: const Text('Yes')),
+                                                TextButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                    child: const Text('No'))
+                                              ],
+                                            ));
                                   },
                                   icon: const Icon(
                                     Icons.delete,

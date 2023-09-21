@@ -239,17 +239,6 @@ class _DialogPageState extends State<DialogPage> {
                         hintText: 'Select Expense Category',
                       ),
                     ),
-                    // TextFormField(
-                    //   onSaved: (value) {
-                    //     newIncome = IncomeModel(
-                    //         amount: newIncome.amount,
-                    //         createdDate: DateTime.now(),
-                    //         title: value!,
-                    //         id: DateTime.now().toString());
-                    //   },
-                    //   decoration:
-                    //       const InputDecoration(hintText: 'Income name'),
-                    // ),
                     const SizedBox(
                       height: 10,
                     ),
