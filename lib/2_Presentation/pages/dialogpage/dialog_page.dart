@@ -7,7 +7,6 @@ import 'package:coinpulse2/2_Presentation/pages/bills/pages/all_expenses.dart';
 import 'package:coinpulse2/2_Presentation/pages/tab_bar/tab_bar_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 
 class DialogueWrapper extends StatelessWidget {
   const DialogueWrapper({super.key});
@@ -52,26 +51,30 @@ class _DialogPageState extends State<DialogPage> {
       id: DateTime.now().toString());
 
   void _submitForm() {
-    formState.currentState!.save();
-    final billBloc = context.read<BillBloc>();
+    if (formState.currentState!.validate()) {
+      formState.currentState!.save();
+      final billBloc = context.read<BillBloc>();
 
-    billBloc.add(CreateBill(createdBill: newBill));
+      billBloc.add(CreateBill(createdBill: newBill));
 
-    billBloc.add(RetrieveBill());
+      billBloc.add(RetrieveBill());
 
-    billBloc.add(GetTotalAmount());
+      billBloc.add(GetTotalAmount());
 
-    Navigator.of(context).pop();
+      Navigator.of(context).pop();
+    }
   }
 
   void saveIncomeForm() {
-    incomeState.currentState!.save();
+    if (incomeState.currentState!.validate()) {
+      incomeState.currentState!.save();
 
-    context.read<IncomeBloc>().add(CreateIncome(createIncome: newIncome));
+      context.read<IncomeBloc>().add(CreateIncome(createIncome: newIncome));
 
-    context.read<IncomeBloc>().add(RetrieveIncome());
+      context.read<IncomeBloc>().add(RetrieveIncome());
 
-    Navigator.of(context).pop();
+      Navigator.of(context).pop();
+    }
   }
 
   void _showDialog() {
@@ -142,6 +145,12 @@ class _DialogPageState extends State<DialogPage> {
                       height: 10,
                     ),
                     TextFormField(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Input cannot be empty.';
+                        }
+                        return null;
+                      },
                       onSaved: (value) {
                         newBill = ExpenseModel(
                             amount: value!,
@@ -177,6 +186,7 @@ class _DialogPageState extends State<DialogPage> {
   void initState() {
     super.initState();
     context.read<BillBloc>().add(RetrieveBill());
+    //context.read<BillBloc>().add(GetTotalAmount());
 
     //context.read<IncomeBloc>().add(GetTotalIncomeAmount());
   }
@@ -244,6 +254,12 @@ class _DialogPageState extends State<DialogPage> {
                       height: 10,
                     ),
                     TextFormField(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Input required';
+                        }
+                        return null;
+                      },
                       onSaved: (value) {
                         newIncome = IncomeModel(
                             amount: value!,
@@ -314,7 +330,7 @@ class _DialogPageState extends State<DialogPage> {
                                         print('kk${state.totalAmount}');
                                         return Text('${state.totalAmount}');
                                       }
-                                      return const Text('10000',
+                                      return const Text('Loading...',
                                           style:
                                               TextStyle(color: Colors.white));
                                     },
@@ -337,8 +353,14 @@ class _DialogPageState extends State<DialogPage> {
                                   if (state is TotalAmountRetrieved) {
                                     print('kj${state.totalAmount}');
                                     return Text('${state.totalAmount}');
+                                  } else if (state is BillInitial) {
+                                    return const SizedBox.shrink();
+                                  } else {
+                                    return const Text(
+                                      'Loading...',
+                                      style: TextStyle(color: Colors.white),
+                                    );
                                   }
-                                  return const Text('6000');
                                 }),
                               ],
                             ),
