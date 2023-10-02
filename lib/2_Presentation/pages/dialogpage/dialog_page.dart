@@ -94,9 +94,10 @@ class _DialogPageState extends State<DialogPage> {
 
     showDialog(
       context: context,
-      builder: (context) {
-        return BlocProvider<BillBloc>(
-          create: (_) => BillBloc(),
+      builder: (_) {
+        final billBloc = context.read<BillBloc>();
+        return BlocProvider.value(
+          value: billBloc,
           child: AlertDialog(
             title: const Text('Create an expense'),
             content: Form(
@@ -286,6 +287,7 @@ class _DialogPageState extends State<DialogPage> {
 
   @override
   Widget build(BuildContext context) {
+    final billBloc = context.read<BillBloc>();
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: _showDialog,
@@ -312,8 +314,14 @@ class _DialogPageState extends State<DialogPage> {
                           children: [
                             const Column(
                               children: [
-                                Text('Total Balance (Ksh)'),
-                                Text('3400')
+                                Text(
+                                  'Total Balance (Ksh)',
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                                Text(
+                                  'Loading...',
+                                  style: TextStyle(color: Colors.white),
+                                )
                               ],
                             ),
                             const SizedBox(
@@ -321,7 +329,10 @@ class _DialogPageState extends State<DialogPage> {
                             ),
                             Column(
                               children: [
-                                const Text('Income (Ksh)'),
+                                const Text(
+                                  'Income (Ksh)',
+                                  style: TextStyle(fontSize: 15),
+                                ),
                                 GestureDetector(
                                   onTap: showIncomeDialog,
                                   child: BlocBuilder<IncomeBloc, IncomeState>(
@@ -347,21 +358,27 @@ class _DialogPageState extends State<DialogPage> {
                           children: [
                             Column(
                               children: [
-                                const Text('Total Expenses (Ksh)'),
-                                BlocBuilder<BillBloc, BillState>(
-                                    builder: (context, state) {
-                                  if (state is TotalAmountRetrieved) {
-                                    print('kj${state.totalAmount}');
-                                    return Text('${state.totalAmount}');
-                                  } else if (state is BillInitial) {
-                                    return const SizedBox.shrink();
-                                  } else {
-                                    return const Text(
-                                      'Loading...',
-                                      style: TextStyle(color: Colors.white),
-                                    );
-                                  }
-                                }),
+                                const Text(
+                                  'Total Expenses (Ksh)',
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                                BlocProvider.value(
+                                  value: billBloc,
+                                  child: BlocBuilder<BillBloc, BillState>(
+                                      builder: (_, state) {
+                                    if (state is TotalAmountRetrieved) {
+                                      print('kj${state.totalAmount}');
+                                      return Text('${state.totalAmount}');
+                                    } else if (state is BillInitial) {
+                                      return const SizedBox.shrink();
+                                    } else {
+                                      return const Text(
+                                        'Loading...',
+                                        style: TextStyle(color: Colors.white),
+                                      );
+                                    }
+                                  }),
+                                ),
                               ],
                             ),
                           ],
